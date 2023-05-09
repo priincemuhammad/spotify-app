@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import {
   HomeIcon,
   MagnifyingGlassIcon,
@@ -5,12 +7,35 @@ import {
   HeartIcon,
   RssIcon,
   PlusCircleIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import { signOut, useSession } from "next-auth/react";
 
 const Sidebar = () => {
+  const { data: session, status } = useSession();
+  console.log(session);
+  console.log(session?.user.name);
+  console.log(session?.user.email);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // If the user is not logged in, redirect to the login page
+    if (session === null || undefined) {
+      router.push("/login");
+    }
+  }, [session]);
+
   return (
     <div className="text-gray-500 p-5 text-sm border-r border-gray-900">
       <div className="space-y-4">
+        <button
+          onClick={() => signOut()}
+          className="flex items-center space-x-2 hover:text-white"
+        >
+          <ArrowRightOnRectangleIcon className="h-5 w-5" />
+          <p>Sign out</p>
+        </button>
         <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
