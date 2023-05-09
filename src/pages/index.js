@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Sidebar from "../components/Sidebar";
+import Center from "@/components/Center";
 
 export default function Home() {
   return (
@@ -9,10 +10,11 @@ export default function Home() {
         <link rel="shortcut icon" href="/spotifyLogo.png" />
       </Head>
       <div className="bg-black h-screen overflow-hidden">
-        <main>
+        <main className="flex">
           {/* Sidebar */}
           <Sidebar />
           {/* Center */}
+          <Center />
         </main>
         <div>{/* Player */}</div>
       </div>
