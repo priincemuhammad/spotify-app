@@ -2,6 +2,9 @@ import { useSession } from "next-auth/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
+import { selectItem } from "@/features/playlistSlice";
+import { useSelector } from "react-redux";
+import Songs from "./Songs";
 
 const colors = [
   "from-indigo-500",
@@ -15,11 +18,14 @@ const colors = [
 ];
 
 const Center = () => {
+  const getPlaylist = useSelector(selectItem);
   const { data: session } = useSession();
   const [color, setColor] = useState(null);
   useEffect(() => {
     setColor(shuffle(colors).pop());
-  }, []);
+  }, [getPlaylist]);
+
+  console.log(getPlaylist);
 
   return (
     <div className="flex-grow text-white">
@@ -36,7 +42,24 @@ const Center = () => {
       </header>
       <section
         className={`flex items-end space-x-7   h-80 p-8 bg-gradient-to-b to-black ${color}`}
-      ></section>
+      >
+        <div className="flex items-end space-x-5">
+          <img
+            src={getPlaylist?.images[0].url}
+            className="h-44 w-44 shadow-2xl rounded-md"
+            alt="playlistImg"
+          />
+          <div>
+            <p className="uppercase">Playlist</p>
+            <h1 className="text-2xl md:text-3xl xl:text-5xl font-bold">
+              {getPlaylist?.name}
+            </h1>
+          </div>
+        </div>
+      </section>
+      <div>
+        <Songs />
+      </div>
     </div>
   );
 };
