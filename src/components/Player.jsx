@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useSelector, useDispatch } from "react-redux";
 import useSpotify from "@/hooks/useSpotify";
@@ -18,6 +18,7 @@ import {
   PauseCircleIcon,
   SpeakerWaveIcon,
 } from "@heroicons/react/24/solid";
+import { debounce } from "lodash";
 
 const Player = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,6 @@ const Player = () => {
   const fetchCurrentShongInfo = () => {
     if (!songInfo) {
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log("now playing", data.body?.item.id);
         dispatch(setCurrentId(data.body?.item?.id));
 
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
@@ -62,6 +62,19 @@ const Player = () => {
       setVolume(50);
     }
   }, [songInfo, currentTrackId, session]);
+
+  useEffect(() => {
+    if (volume > 0 && volume < 100) {
+      adjustVolume(volume);
+    }
+  }, [volume]);
+
+  const adjustVolume = useCallback(
+    debounce((volume) => {
+      spotifyApi.setVolume(volume);
+    }, 100),
+    []
+  );
 
   return (
     <div className="text-white text-xs md:text-base w-full grid grid-cols-3 items-center py-8 px-2 md:px-8 bg-gradient-to-b from-black to-gray-900 ">
@@ -98,14 +111,14 @@ const Player = () => {
       </div>
       {/* rightside */}
       <div className="flex justify-end items-center space-x-4">
-        {volume > 0 ? (
+        {volume > 1 ? (
           <SpeakerWaveIcon
-            onClick={() => setVolume(0)}
+            onClick={() => setVolume(1)}
             className="h-8 w-8 cursor-pointer hover:scale-125 transition transform duration-300 ease-out"
           />
         ) : (
           <SpeakerXMarkIcon
-            onClick={() => setVolume(20)}
+            onClick={() => setVolume(50)}
             className="h-8 w-8 cursor-pointer hover:scale-125 transition transform duration-300 ease-out"
           />
         )}
