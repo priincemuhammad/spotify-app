@@ -7,7 +7,7 @@ const Songs = () => {
   const playlists = useSelector(selectItem);
 
   return (
-    <div className="px-8 py-4 pb-28 flex flex-col  text-white h-screen overflow-y-scroll scrollbar-hide">
+    <div className="px-8 py-4 pb-96 flex flex-col  text-white h-screen overflow-y-scroll scrollbar-hide">
       {playlists?.tracks?.items?.map((data, index) => (
         <Song key={index} data={data} index={index} />
       ))}

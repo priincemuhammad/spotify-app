@@ -1,24 +1,24 @@
 import Durationmanager from "../../lib/time";
 import { useDispatch } from "react-redux";
-import { playPouse } from "@/features/playerSlice";
+import { setCurrentId, playPause, selectPlaying } from "@/features/playerSlice";
 import useSpotify from "@/hooks/useSpotify";
-import { selectPlaying } from "@/features/playerSlice";
 import { useSelector } from "react-redux";
 
 const Song = ({ data, index }) => {
-  console.log(data);
   const dispatch = useDispatch();
-  const spotify = useSpotify();
-  const play = useSelector(selectPlaying);
-  console.log(play);
+  const spotifyApi = useSpotify();
+  const isPlaying = useSelector(selectPlaying);
+
   const playSong = () => {
-    dispatch(playPouse(data.track.id));
-    if (play === true) {
-      spotify.play({
+    dispatch(setCurrentId(data?.track.id));
+    if (isPlaying === true) {
+      dispatch(playPause(false));
+      spotifyApi.play({
         uris: [data.track.uri],
       });
     } else {
-      spotify.pause({
+      dispatch(playPause(true));
+      spotifyApi.pause({
         uris: [data.track.uri],
       });
     }
