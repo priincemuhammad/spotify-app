@@ -7,17 +7,17 @@ import {
   HeartIcon,
   RssIcon,
   PlusCircleIcon,
-  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import useSpotify from "@/hooks/useSpotify";
 import { useDispatch } from "react-redux";
-import { addPlaylist } from "@/features/playlistSlice";
+import { addPlaylist } from "@/features/playerSlice";
 
 const Sidebar = () => {
+  const initialPlaylistId = "7ELBRC0xLGvsKid6HzTejB";
   const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState([]);
-  const [playlistId, setPlaylistId] = useState(null);
+  const [playlistId, setPlaylistId] = useState(initialPlaylistId);
   const router = useRouter();
   const spotifyApi = useSpotify();
   const dispatch = useDispatch();
@@ -56,13 +56,7 @@ const Sidebar = () => {
     >
       <div className="space-y-4">
         <img src="/spotifyFullLogo.jpg" alt="logo" className="w-60" />
-        <button
-          onClick={() => signOut()}
-          className="flex items-center space-x-2 hover:text-white"
-        >
-          <ArrowRightOnRectangleIcon className="h-5 w-5" />
-          <p>Sign out</p>
-        </button>
+
         <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
           <p>Home</p>
